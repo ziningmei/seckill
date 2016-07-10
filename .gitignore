@@ -1,8 +1,9 @@
-.DS_Store
-.idea/
-Thumbs.db
-db.json
-*.log
-node_modules/
-public/
-.deploy*/
+*.DS_Store
+bin
+target
+.classpath
+.project
+.settings
+src/main/webapp/META-INF
+.idea
+*.iml
