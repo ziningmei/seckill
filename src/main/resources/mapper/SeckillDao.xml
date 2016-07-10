@@ -8,8 +8,8 @@
         UPDATE
           seckill
         SET
-          number=number-1;
-        WHERE sekilled_id=#{sekillId}
+          number=number-1
+        WHERE seckill_id=#{seckillId}
         and start_time <![CDATA[<=]]> #{killTime}
         and end_time >= #{killTime}
         and number > 0
@@ -24,7 +24,6 @@
     <select id="queryAll" resultType="Seckill">
         SELECT *
         from seckill
-        WHERE  seckill_id=#{seckillId}
         ORDER BY create_time DESC
         limit #{offset},#{limit}
     </select>
