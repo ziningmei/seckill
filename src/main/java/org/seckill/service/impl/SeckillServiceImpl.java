@@ -12,6 +12,9 @@ import org.seckill.exception.SeckillClosedException;
 import org.seckill.exception.SeckillException;
 import org.seckill.service.SeckillService;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.Date;
@@ -21,12 +24,15 @@ import java.util.logging.Logger;
 /**
  * Created by ziningmei on 16/7/10.
  */
+@Service
 public class SeckillServiceImpl implements SeckillService {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
     private SeckillDao seckillDao;
 
+    @Autowired
     private SuccessKilledDao successKilledDao;
 
     private final String slat = "1231231asdasd";
@@ -62,6 +68,7 @@ public class SeckillServiceImpl implements SeckillService {
         return md5;
     }
 
+    @Transactional
     public SeckillExecution executeSeckill(long seckillId, long userPhone, String md5) throws SeckillException, RepeatKillException, SeckillClosedException {
         if (md5 == null || !md5.equals(getMD5(seckillId))) {
             throw new SeckillException("data rewrite");
@@ -71,22 +78,22 @@ public class SeckillServiceImpl implements SeckillService {
             int count = seckillDao.reduceNumber(seckillId, nowTime);
             if (count <= 0) {
                 throw new SeckillClosedException("closed");
-            }else{
-                int insertCount=successKilledDao.insertSuccessKilled(seckillId,userPhone);
-                if(insertCount<=0){
+            } else {
+                int insertCount = successKilledDao.insertSuccessKilled(seckillId, userPhone);
+                if (insertCount <= 0) {
                     throw new RepeatKillException("repeat");
-                }else{
-                    SuccessKilled successKilled=successKilledDao.queryByIdWithSeckill(seckillId,userPhone);
-                    return new SeckillExecution(seckillId, SeckillStateEnum.SUCCESS,successKilled);
+                } else {
+                    SuccessKilled successKilled = successKilledDao.queryByIdWithSeckill(seckillId, userPhone);
+                    return new SeckillExecution(seckillId, SeckillStateEnum.SUCCESS, successKilled);
                 }
             }
-        }catch (SeckillClosedException e1) {
-            throw  e1;
-        }catch (RepeatKillException e2) {
-            throw  e2;
-        }catch (Exception e) {
+        } catch (SeckillClosedException e1) {
+            throw e1;
+        } catch (RepeatKillException e2) {
+            throw e2;
+        } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new SeckillException("inner error:"+e.getMessage());
+            throw new SeckillException("inner error:" + e.getMessage());
         }
     }
 }
