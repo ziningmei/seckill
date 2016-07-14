@@ -13,6 +13,8 @@ public class Seckill {
 
     private Date startTime;
 
+    private Integer number;
+
     private Date endTime;
 
     private  Date createTime;
@@ -57,12 +59,21 @@ public class Seckill {
         this.createTime = createTime;
     }
 
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
     @Override
-    public String  toString() {
+    public String toString() {
         return "Seckill{" +
                 "seckillId=" + seckillId +
                 ", name='" + name + '\'' +
                 ", startTime=" + startTime +
+                ", number=" + number +
                 ", endTime=" + endTime +
                 ", createTime=" + createTime +
                 '}';
